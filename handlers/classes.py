@@ -1,5 +1,5 @@
 from aiogram import Router, html, F
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.utils.deep_linking import create_start_link
@@ -16,6 +16,7 @@ router = Router()
 class ClassesFSM(StatesGroup):
   allclases = State()
   newclass = State()
+  class_id = State()
 
 def get_class_message(class_: Class, link):
   return html.bold(join([
@@ -42,5 +43,15 @@ async def name_class_handler(message: Message, state: FSMContext):
 async def class_handler(message: Message, state: FSMContext):
   class_: Class = get_class(message.text)
   if class_ == None: return
-  
+
+  await state.update_data(class_id = class_.id)
   await message.answer(get_class_message(class_, await create_start_link(message.bot, class_.link)), reply_markup=get_class_keyboard())
+
+@router.callback_query(F.data == "class")
+async def get_class_handler(callback_query: CallbackQuery, state: FSMContext):
+  state_data = await state.get_data()
+  class_id = state_data["class_id"]
+  class_ = get_class(class_id)
+
+  await state.update_data(class_id = class_.id)
+  await callback_query.message.edit_text(get_class_message(class_, await create_start_link(callback_query.bot, class_.link)), reply_markup=get_class_keyboard())
