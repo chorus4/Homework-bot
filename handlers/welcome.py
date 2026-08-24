@@ -7,6 +7,8 @@ from keyboards.welcome import get_welcome_keyboard
 
 from db.methods.classes import get_classes
 
+from handlers.classes import ClassesFSM
+
 from utils import join
 
 router = Router()
@@ -26,6 +28,7 @@ def get_welcome_message(message):
 async def command_start_handler(message: Message, state: FSMContext) -> None:
     classes = get_classes(message.from_user.id)
     await state.clear()
+    await state.set_state(ClassesFSM.allclases)
 
     await message.answer_photo(photo=welcome_image, caption=get_welcome_message(message), reply_markup=get_welcome_keyboard(classes))
 
@@ -33,5 +36,6 @@ async def command_start_handler(message: Message, state: FSMContext) -> None:
 async def main_menu(callback_query: CallbackQuery, state: FSMContext):
     classes = get_classes(callback_query.from_user.id)
     await state.clear()
+    await state.set_state(ClassesFSM.allclases)
 
     await callback_query.message.answer_photo(photo=welcome_image, caption=get_welcome_message(callback_query.message), reply_markup=get_welcome_keyboard(classes))

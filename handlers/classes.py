@@ -11,6 +11,8 @@ from db.models.classes import Class
 
 from utils import join
 
+import logging
+
 router = Router()
 
 class ClassesFSM(StatesGroup):
@@ -39,9 +41,10 @@ async def name_class_handler(message: Message, state: FSMContext):
   await message.answer(html.bold("Успішно"))
   await message.answer(html.bold("Обери дію нижче 👇"), reply_markup=get_classes_keyboard())
 
-@router.message()
+@router.message(ClassesFSM.allclases)
 async def class_handler(message: Message, state: FSMContext):
-  class_: Class = get_class(message.text)
+  logging.info("Handled class")
+  class_ = get_class(message.text)
   if class_ == None: return
 
   await state.update_data(class_id = class_.id)

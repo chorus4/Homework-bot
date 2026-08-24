@@ -10,11 +10,11 @@ def add_user(id, username):
   session.add(user)
   session.commit()
 
-def get_user(id: int): 
+def get_user(id: int) -> User: 
   user = session.exec(select(User).where(User.id == id)).first()
   return user
 
-def check_user(id):
+def check_user(id) -> bool:
   return get_user(id) != None
 
 def update_username(id, username):

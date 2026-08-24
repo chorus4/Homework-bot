@@ -13,7 +13,7 @@ def create_class(owner, name):
   session.commit()
 
 @singledispatch
-def get_class(arg):
+def get_class(arg) -> Class:
   print("fuck")
 
 @get_class.register
@@ -26,6 +26,6 @@ def _(name: str):
   classs = session.exec(select(Class).where(Class.name == name)).first()
   return classs
 
-def get_classes(user_id):
+def get_classes(user_id) -> list[Class]:
   classes = session.exec(select(Class).where(Class.owner == user_id)).all()
   return classes
