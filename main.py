@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import sys
+import locale
+locale.setlocale(locale.LC_ALL, 'uk_UA')
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -10,6 +12,7 @@ from handlers import main_router
 from env import TOKEN
 
 import db
+
 
 dp = Dispatcher()
 dp.include_router(main_router)

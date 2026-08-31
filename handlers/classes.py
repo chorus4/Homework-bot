@@ -9,7 +9,7 @@ from keyboards.classes import get_classes_keyboard, get_new_class_keyboard, get_
 from db.methods.classes import create_class, get_class
 from db.models.classes import Class
 
-from utils import join
+from utils import join, get_todays_weekday
 
 import logging
 
@@ -48,7 +48,7 @@ async def class_handler(message: Message, state: FSMContext):
   if class_ == None: return
 
   await state.update_data(class_id = class_.id)
-  await message.answer(get_class_message(class_, await create_start_link(message.bot, class_.link)), reply_markup=get_class_keyboard())
+  await message.answer(get_class_message(class_, await create_start_link(message.bot, class_.link)), reply_markup=get_class_keyboard(get_todays_weekday()))
 
 @router.callback_query(F.data == "class")
 async def get_class_handler(callback_query: CallbackQuery, state: FSMContext):
@@ -57,4 +57,4 @@ async def get_class_handler(callback_query: CallbackQuery, state: FSMContext):
   class_ = get_class(class_id)
 
   await state.update_data(class_id = class_.id)
-  await callback_query.message.edit_text(get_class_message(class_, await create_start_link(callback_query.bot, class_.link)), reply_markup=get_class_keyboard())
+  await callback_query.message.edit_text(get_class_message(class_, await create_start_link(callback_query.bot, class_.link)), reply_markup=get_class_keyboard(get_todays_weekday()))
