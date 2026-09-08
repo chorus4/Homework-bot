@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
 import calendar
+import logging
 
 from keyboards.schedule import get_schedule_keyboard, get_entry_keyboard, EntryCallback, ChangeEntryCallback, ScheduleCallback
 
@@ -40,11 +41,14 @@ async def schedule_handler(callback_query: CallbackQuery, callback_data: Schedul
 async def entry_handler(callback_query: CallbackQuery, callback_data: EntryCallback, state: FSMContext):
   state_data = await state.get_data()
   class_id = state_data["class_id"]
+  weekday = state_data["weekday"]
   lessons = get_lessons(class_id)
+
+  logging.info(weekday)
 
   await state.update_data(position=callback_data.position)
 
-  await callback_query.message.edit_text(get_entry_message(), reply_markup=get_entry_keyboard(lessons))
+  await callback_query.message.edit_text(get_entry_message(), reply_markup=get_entry_keyboard(lessons, weekday))
 
 @router.callback_query(ChangeEntryCallback.filter())
 async def change_entry_handler(callback_query: CallbackQuery, callback_data: ChangeEntryCallback, state: FSMContext):
@@ -54,6 +58,7 @@ async def change_entry_handler(callback_query: CallbackQuery, callback_data: Cha
 
   weekday = state_data["weekday"]
   position = state_data["position"]
+  logging.info(weekday)
 
   change_entry(class_id, weekday, position, callback_data.lesson)
 

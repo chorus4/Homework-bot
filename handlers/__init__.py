@@ -4,6 +4,7 @@ from handlers.welcome import router as welcome_router
 from handlers.classes import router as classes_router
 from handlers.lessons import router as lessons_router
 from handlers.schedule import router as schedule_router
+from handlers.homework import router as homework_router
 
 from middlewares.user import UserMiddleware
 
@@ -13,7 +14,8 @@ handlers = [
   welcome_router,
   classes_router,
   lessons_router,
-  schedule_router
+  schedule_router,
+  homework_router
 ]
 
 main_router.include_routers(*handlers)

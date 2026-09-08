@@ -34,7 +34,7 @@ def get_schedule_keyboard(entries: list[SCEntry], weekday):
 
   return builder.as_markup()
 
-def get_entry_keyboard(lessons: list[Lesson]):
+def get_entry_keyboard(lessons: list[Lesson], day):
   builder = InlineKeyboardBuilder()
 
   for lesson in lessons:
@@ -42,6 +42,6 @@ def get_entry_keyboard(lessons: list[Lesson]):
 
   builder.row(InlineKeyboardButton(text="Пусто ❌", callback_data="delete-entry"))
 
-  builder.row(InlineKeyboardButton(text="🔙 Назад", callback_data="schedule"))
+  builder.row(InlineKeyboardButton(text="🔙 Назад", callback_data=ScheduleCallback(day=day).pack()))
 
   return builder.as_markup()
