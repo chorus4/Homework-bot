@@ -57,3 +57,9 @@ def get_new_cancel_homework():
   return InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="🔙 Назад", callback_data="new-homework")]
   ])
+
+def get_edit_homework_keyboard(day):
+  return InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="❌ Видалити", callback_data="delete-homework")],
+    [InlineKeyboardButton(text="🔙 Назад", callback_data=HomeworkCallback(day=day.isoformat()).pack())],
+  ])

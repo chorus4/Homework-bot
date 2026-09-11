@@ -23,7 +23,7 @@ def get_welcome_message(message):
         'Обери дію нижче 👇'
     ]))
 
-@router.message(CommandStart())
+@router.message(CommandStart(deep_link=False))
 @router.message(F.text == "🔙 Головне меню")
 async def command_start_handler(message: Message, state: FSMContext) -> None:
     classes = get_classes(message.from_user.id)

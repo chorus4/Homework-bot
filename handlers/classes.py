@@ -46,6 +46,7 @@ async def class_handler(message: Message, state: FSMContext):
   logging.info("Handled class")
   class_ = get_class(message.text)
   if class_ == None: return
+  await state.set_state(None)
 
   await state.update_data(class_id = class_.id)
   await message.answer(get_class_message(class_, await create_start_link(message.bot, class_.link)), reply_markup=get_class_keyboard(get_todays_day()))
