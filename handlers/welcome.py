@@ -15,9 +15,9 @@ router = Router()
 
 welcome_image = FSInputFile('assets/welcome.png')
 
-def get_welcome_message(message):
+def get_welcome_message(full_name):
     return html.bold(join([
-        f'Привіт, {message.from_user.full_name}!',
+        f'Привіт, {full_name}!',
         '',
         'Я бот, який записує все твоє домашнє завдання 🕰',
         'Обери дію нижче 👇'
@@ -30,7 +30,7 @@ async def command_start_handler(message: Message, state: FSMContext) -> None:
     await state.clear()
     await state.set_state(ClassesFSM.allclases)
 
-    await message.answer_photo(photo=welcome_image, caption=get_welcome_message(message), reply_markup=get_welcome_keyboard(classes))
+    await message.answer_photo(photo=welcome_image, caption=get_welcome_message(message.from_user.full_name), reply_markup=get_welcome_keyboard(classes))
 
 @router.callback_query(F.data == "main_menu")
 async def main_menu(callback_query: CallbackQuery, state: FSMContext):
@@ -38,4 +38,4 @@ async def main_menu(callback_query: CallbackQuery, state: FSMContext):
     await state.clear()
     await state.set_state(ClassesFSM.allclases)
 
-    await callback_query.message.answer_photo(photo=welcome_image, caption=get_welcome_message(callback_query.message), reply_markup=get_welcome_keyboard(classes))
+    await callback_query.message.answer_photo(photo=welcome_image, caption=get_welcome_message(callback_query.from_user.full_name), reply_markup=get_welcome_keyboard(classes))

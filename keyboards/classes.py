@@ -25,5 +25,11 @@ def get_class_keyboard(day: date):
   return InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Розклад", callback_data=ScheduleCallback(day=day.weekday()).pack()), InlineKeyboardButton(text="Предмети", callback_data="lessons")],
     [InlineKeyboardButton(text="ДЗ", callback_data=HomeworkCallback(day=day.isoformat()).pack())],
+    [InlineKeyboardButton(text="❌ Видалити", callback_data="delete-class")],
     [InlineKeyboardButton(text="🔙 Головне меню", callback_data="main_menu")]
+  ])
+
+def get_delete_class_keyboard():
+  return InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="🔙 Назад", callback_data="class")]
   ])
