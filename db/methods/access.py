@@ -17,6 +17,9 @@ def get_accesses_by_class(class_id: int) -> list[Access]:
   accesses = session.exec(select(Access).where(Access.class_id == class_id)).all()
   return accesses
 
+def check_access(user_id: int, class_id: int):
+  return get_access_by_all(class_id, user_id) != None
+
 def get_access_by_all(class_id: int, user_id: int) -> Access:
   access = session.exec(select(Access).where(Access.class_id == class_id).where(Access.user_id == user_id)).first()
   return access

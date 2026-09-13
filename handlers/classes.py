@@ -3,13 +3,13 @@ from aiogram.types import Message, CallbackQuery, MessageReactionUpdated
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.utils.deep_linking import create_start_link
-from aiogram.filters import CommandStart, CommandObject, StateFilter
+from aiogram.filters import CommandStart, CommandObject, StateFilter, MagicData
 
 from keyboards.classes import get_new_class_keyboard, get_class_keyboard, get_delete_class_keyboard
 from keyboards.welcome import get_welcome_keyboard
 
 from db.methods.classes import create_class, get_class, get_classes, delete_class, get_class_by_link
-from db.methods.access import get_access_by_all, delete_access, create_access
+from db.methods.access import get_access_by_all, delete_access, create_access, check_access
 from db.models.classes import Class
 
 from utils import join, get_todays_day
@@ -53,10 +53,14 @@ async def create_class_handler(message: Message, state: FSMContext):
   await message.answer(html.bold("Введи ім'я нового классу"), reply_markup=get_new_class_keyboard())
 
 # Add access
-@router.message(CommandStart(deep_link=True), StateFilter("*"))
+@router.message(CommandStart(deep_link=True), StateFilter("*"), MagicData(~F.command.args.startswith('h')))
 async def add_access_handler(message: Message, command: CommandObject, state: FSMContext):
   access_link = command.args
   class_ = get_class_by_link(uuid.UUID(access_link))
+
+  if check_access(message.from_user.id, class_.id):
+    await message.delete()
+    return
 
   create_access(class_.id, message.from_user.id, 'invited')
   await state.update_data(class_id = class_.id)
