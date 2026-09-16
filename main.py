@@ -2,7 +2,7 @@ import asyncio
 import logging
 import sys
 import locale
-locale.setlocale(locale.LC_ALL, 'uk_UA')
+locale.setlocale(locale.LC_ALL, 'uk_UA.utf8')
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
